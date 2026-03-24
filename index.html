@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLASH • Presale</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&display=swap');
+        
+        :root {
+            --primary: #00ff9d;
+        }
+        
+        * {
+            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 150ms;
+        }
+        
+        body {
+            font-family: 'Inter', system_ui, sans-serif;
+        }
+        
+        .heading-font {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .hero-bg {
+            background: linear-gradient(90deg, #0a0a0a 0%, #111111 100%);
+        }
+        
+        .glass {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(12px);
+        }
+        
+        .neon-text {
+            text-shadow: 0 0 20px var(--primary);
+        }
+        
+        .live-dot {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .tx-bar {
+            animation: slideIn 0.4s ease forwards;
+        }
+    </style>
+</head>
+<body class="bg-black text-white">
+    <!-- NAVBAR -->
+    <nav class="border-b border-white/10 bg-black/80 backdrop-blur-lg fixed w-full z-50">
+        <div class="max-w-screen-2xl mx-auto px-8 py-5 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-emerald-500 rounded-2xl flex items-center justify-center text-black font-bold text-2xl">⚡</div>
+                <h1 class="heading-font text-3xl tracking-tighter">FLASH</h1>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <a href="#about" class="hover:text-emerald-400">About</a>
+                <a href="#tokenomics" class="hover:text-emerald-400">Tokenomics</a>
+                <a href="#roadmap" class="hover:text-emerald-400">Roadmap</a>
+                <a href="#faq" class="hover:text-emerald-400">FAQ</a>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div id="wallet-status" onclick="connectWallet()" 
+                     class="glass border border-white/20 hover:border-emerald-400 px-5 py-2.5 rounded-3xl text-sm font-medium flex items-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-wallet"></i>
+                    <span id="wallet-text">Connect Wallet</span>
+                </div>
+                
+                <button onclick="showBuyModal()" 
+                        class="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold px-8 py-3 rounded-3xl flex items-center gap-2 shadow-lg shadow-emerald-500/30">
+                    <i class="fa-solid fa-bolt-lightning"></i>
+                    BUY $FLASH NOW
+                </button>
+                
+                <button onclick="toggleMobileMenu()" class="md:hidden text-2xl">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-black border-t border-white/10 px-8 py-6">
+            <div class="flex flex-col gap-4 text-lg">
+                <a href="#about" onclick="toggleMobileMenu()" class="py-3">About</a>
+                <a href="#tokenomics" onclick="toggleMobileMenu()" class="py-3">Tokenomics</a>
+                <a href="#roadmap" onclick="toggleMobileMenu()" class="py-3">Roadmap</a>
+                <a href="#faq" onclick="toggleMobileMenu()" class="py-3">FAQ</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero-bg min-h-screen flex items-center pt-24">
+        <div class="max-w-screen-2xl mx-auto px-8 grid md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-8">
+                <div class="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 text-sm font-medium px-6 py-3 rounded-3xl">
+                    <div class="w-2 h-2 bg-emerald-400 rounded-full live-dot"></div>
+                    PRESALE LIVE • STAGE 1
+                </div>
+                
+                <h1 class="heading-font text-7xl md:text-8xl leading-none tracking-tighter neon-text">
+                    INSTANT.<br>DECENTRALIZED.<br>FLASH.
+                </h1>
+                
+                <p class="text-2xl text-white/70 max-w-lg">
+                    The fastest Layer-2 memecoin presale on Solana. 
+                    Buy $FLASH in under 2 seconds. No gas wars. No waiting.
+                </p>
+                
+                <div class="flex items-center gap-6">
+                    <div>
+                        <div class="text-emerald-400 text-sm">RAISED SO FAR</div>
+                        <div id="raised" class="text-5xl font-bold heading-font">$487,291</div>
+                    </div>
+                    <div class="h-12 w-px bg-white/20"></div>
+                    <div>
+                        <div class="text-emerald-400 text-sm">TOKENS LEFT</div>
+                        <div id="tokens-left" class="text-5xl font-bold heading-font">3,412,709</div>
+                    </div>
+                </div>
+                
+                <!-- Live transaction ticker -->
+                <div class="glass border border-white/10 rounded-3xl p-4 max-w-md">
+                    <div class="flex items-center justify-between text-xs uppercase tracking-widest mb-3 text-white/60">
+                        <div class="flex items-center gap-1">
+                            <i class="fa-solid fa-bolt text-emerald-400"></i>
+                            LIVE TRANSACTIONS
+                        </div>
+                        <span id="tx-count" class="font-mono">142 in last 60s</span>
+                    </div>
+                    <div id="tx-feed" class="space-y-2 max-h-48 overflow-hidden"></div>
+                </div>
+                
+                <div class="flex gap-4">
+                    <button onclick="showBuyModal()" 
+                            class="flex-1 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold py-6 rounded-3xl text-xl flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-bolt-lightning text-3xl"></i>
+                        BUY INSTANTLY
+                    </button>
+                    
+                    <a href="https://t.me/flashcoin" target="_blank"
+                       class="flex-1 border border-white/30 hover:border-white/60 font-medium py-6 rounded-3xl text-xl flex items-center justify-center gap-3">
+                        <i class="fa-brands fa-telegram"></i>
+                        Join Community
+                    </a>
+                </div>
+                
+                <div class="flex items-center gap-8 text-sm">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+                        Audited by Certik
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-lock text-emerald-400"></i>
+                        Locked Liquidity
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-clock text-emerald-400"></i>
+                        Instant Settlement
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right side visual -->
+            <div class="relative hidden md:flex justify-center">
+                <div class="absolute -inset-10 bg-gradient-to-br from-emerald-400/20 to-transparent rounded-[4rem] blur-3xl"></div>
+                <div class="glass border border-emerald-400/30 rounded-3xl p-8 max-w-sm w-full">
+                    <div class="bg-black rounded-3xl p-6 text-center">
+                        <div class="text-emerald-400 text-sm font-medium mb-4">CURRENT PRICE</div>
+                        <div class="text-8xl font-bold heading-font text-white">$0.00042</div>
+                        <div class="text-white/60">+42% from next stage</div>
+                        
+                        <div class="my-8 h-2 bg-white/10 rounded-3xl overflow-hidden">
+                            <div class="h-2 bg-gradient-to-r from-emerald-400 to-cyan-400 w-[68%] rounded-3xl"></div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 text-left text-sm">
+                            <div>
+                                <span class="text-white/60">Soft Cap</span><br>
+                                <span class="font-medium">$500,000</span>
+                            </div>
+                            <div>
+                                <span class="text-white/60">Hard Cap</span><br>
+                                <span class="font-medium">$1,200,000</span>
+                            </div>
+                        </div>
+                        
+                        <button onclick="showBuyModal()" 
+                                class="mt-8 w-full py-5 bg-white text-black font-bold text-xl rounded-3xl flex items-center justify-center gap-3">
+                            <i class="fa-solid fa-wallet"></i>
+                            BUY WITH SOL • INSTANT
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BUY MODAL -->
+    <div id="buy-modal" onclick="if(event.target.id==='buy-modal')hideBuyModal()" 
+         class="hidden fixed inset-0 bg-black/90 z-[9999] flex items-center justify-center">
+        <div onclick="event.stopImmediatePropagation()" 
+             class="glass border border-white/20 rounded-3xl max-w-lg w-full mx-4 p-8">
+            
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl heading-font">Buy $FLASH Instantly</h2>
+                <button onclick="hideBuyModal()" class="text-3xl text-white/50 hover:text-white">×</button>
+            </div>
+            
+            <div id="wallet-connected-view" class="hidden">
+                <div class="flex items-center gap-3 mb-6 bg-white/10 rounded-2xl p-4">
+                    <div class="w-10 h-10 bg-emerald-400 text-black rounded-2xl flex items-center justify-center font-bold">👛</div>
+                    <div>
+                        <div class="font-medium" id="connected-address">0x71C4...f3A9</div>
+                        <div class="text-xs text-emerald-400">Connected • Solana</div>
+                    </div>
+                    <button onclick="disconnectWallet()" class="ml-auto text-xs px-4 py-2 border border-white/30 rounded-3xl">Disconnect</button>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="text-white/70 text-sm block mb-2">You pay</label>
+                    <div class="flex border border-white/30 rounded-3xl p-4 items-center">
+                        <input id="pay-amount" type="text" value="10" 
+                               class="flex-1 bg-transparent text-4xl font-bold outline-none">
+                        <div class="text-2xl font-semibold">SOL</div>
+                    </div>
+                </div>
+                
+                <div class="mb-8 text-center">
+                    <i class="fa-solid fa-arrow-down text-emerald-400 text-4xl"></i>
+                    <div class="text-sm text-white/60 mt-2">You receive</div>
+                    <div id="receive-amount" class="text-6xl font-bold heading-font text-emerald-400">23,809 $FLASH</div>
+                </div>
+                
+                <div class="bg-black/50 rounded-2xl p-5 text-sm space-y-3 mb-8">
+                    <div class="flex justify-between">
+                        <span class="text-white/60">Current price</span>
+                        <span class="font-medium">$0.00042</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-white/60">Gas fee</span>
+                        <span class="text-emerald-400 font-medium">0.0001 SOL <span class="text-xs">(instant)</span></span>
+                    </div>
+                    <div class="flex justify-between border-t border-white/10 pt-3">
+                        <span class="text-white/60">Total</span>
+                        <span id="total-pay" class="font-bold">10.0001 SOL</span>
+                    </div>
+                </div>
+                
+                <button onclick="executeInstantTransaction()" 
+                        class="w-full py-6 bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-2xl rounded-3xl flex items-center justify-center gap-4">
+                    <i class="fa-solid fa-bolt-lightning"></i>
+                    CONFIRM • SEND NOW
+                </button>
+                <p class="text-center text-xs text-white/50 mt-4">Transaction will confirm in &lt; 1 second on Solana</p>
+            </div>
+            
+            <!-- Not connected view -->
+            <div id="wallet-not-connected-view">
+                <div class="text-center py-12">
+                    <i class="fa-solid fa-wallet text-8xl text-white/30 mb-6"></i>
+                    <h3 class="text-2xl mb-2">Connect your wallet to buy</h3>
+                    <p class="text-white/60 mb-8">Phantom • Solflare • Backpack</p>
+                    
+                    <button onclick="simulateWalletConnect()" 
+                            class="w-full py-6 border border-emerald-400 text-emerald-400 font-semibold rounded-3xl text-xl flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-plug"></i>
+                        CONNECT WALLET
+                    </button>
+                    
+                    <div class="mt-8 text-xs text-white/40">We support instant Solana transactions only. No Ethereum gas fees.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUCCESS MODAL -->
+    <div id="success-modal" onclick="if(event.target.id==='success-modal')hideSuccessModal()" 
+         class="hidden fixed inset-0 bg-black/90 z-[10000] flex items-center justify-center">
+        <div onclick="event.stopImmediatePropagation()" 
+             class="glass border border-emerald-400/50 rounded-3xl max-w-md w-full mx-4 p-10 text-center">
+            <i class="fa-solid fa-circle-check text-emerald-400 text-8xl mb-6"></i>
+            <h2 class="heading-font text-4xl mb-2">Transaction Confirmed!</h2>
+            <p class="text-white/70 mb-6">Your $FLASH tokens have been delivered instantly.</p>
+            
+            <div class="font-mono text-emerald-400 text-sm mb-8 border border-white/20 rounded-2xl py-4 px-6 bg-black/30">
+                Tx: <span id="tx-hash">4v8k...9p2m</span>
+            </div>
+            
+            <div class="flex gap-4">
+                <button onclick="hideSuccessModal()" 
+                        class="flex-1 py-4 border border-white/30 rounded-3xl">Continue Shopping</button>
+                <button onclick="viewInExplorer()" 
+                        class="flex-1 py-4 bg-emerald-400 text-black rounded-3xl">View on Solscan</button>
+            </div>
+            
+            <p class="text-xs text-white/40 mt-8">You now hold 23,809 $FLASH • Portfolio updated instantly</p>
+        </div>
+    </div>
+
+    <!-- ABOUT SECTION -->
+    <section id="about" class="max-w-screen-2xl mx-auto px-8 py-24">
+        <div class="grid md:grid-cols-12 gap-12 items-center">
+            <div class="md:col-span-5">
+                <div class="text-emerald-400 uppercase text-sm tracking-[3px]">WHY FLASH?</div>
+                <h2 class="heading-font text-6xl leading-none tracking-tighter mb-6">Presale that actually feels instant</h2>
+                <p class="text-xl text-white/70">
+                    Built on Solana for sub-second finality. No waiting for Ethereum confirmations. 
+                    Connect → Pay → Receive tokens in the same block.
+                </p>
+                <div class="mt-12 flex flex-wrap gap-8">
+                    <div class="flex items-center gap-4">
+                        <div class="text-4xl">⚡</div>
+                        <div>
+                            <div class="font-semibold">Instant Execution</div>
+                            <div class="text-sm text-white/60">1.2 seconds average</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="text-4xl">🔒</div>
+                        <div>
+                            <div class="font-semibold">Rug-proof</div>
+                            <div class="text-sm text-white/60">Smart contract audited</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="text-4xl">📈</div>
+                        <div>
+                            <div class="font-semibold">10,000x potential</div>
+                            <div class="text-sm text-white/60">Fair launch mechanics</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="md:col-span-7 bg-white/5 border border-white/10 rounded-3xl p-8 md:p-12">
+                <h3 class="text-2xl mb-8 font-medium">How the instant transaction works</h3>
+                <div class="space-y-8">
+                    <div class="flex gap-6">
+                        <div class="w-10 h-10 bg-emerald-400 text-black rounded-2xl flex-shrink-0 flex items-center justify-center font-bold">1</div>
+                        <div>
+                            <div class="font-semibold mb-1">Connect any Solana wallet</div>
+                            <p class="text-white/70">Phantom, Solflare, Backpack — one click</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-6">
+                        <div class="w-10 h-10 bg-emerald-400 text-black rounded-2xl flex-shrink-0 flex items-center justify-center font-bold">2</div>
+                        <div>
+                            <div class="font-semibold mb-1">Enter amount • Confirm</div>
+                            <p class="text-white/70">No approval transactions. Direct transfer to presale contract</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-6">
+                        <div class="w-10 h-10 bg-emerald-400 text-black rounded-2xl flex-shrink-0 flex items-center justify-center font-bold">3</div>
+                        <div>
+                            <div class="font-semibold mb-1">Receive tokens instantly</div>
+                            <p class="text-white/70">Your $FLASH appears in your wallet in the next block</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TOKENOMICS -->
+    <section id="tokenomics" class="bg-white/5 py-24">
+        <div class="max-w-screen-2xl mx-auto px-8">
+            <div class="text-center mb-12">
+                <span class="px-6 py-3 bg-white/10 text-white/70 text-sm rounded-3xl">TOTAL SUPPLY 1,000,000,000 $FLASH</span>
+            </div>
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="glass rounded-3xl p-8 text-center">
+                    <div class="text-emerald-400 text-sm mb-3">PRESALE ALLOCATION</div>
+                    <div class="text-7xl font-bold heading-font">42%</div>
+                    <div class="text-white/60 mt-6">420,000,000 tokens</div>
+                    <div class="mt-8 text-xs">Price increases every stage</div>
+                </div>
+                <div class="glass rounded-3xl p-8 text-center">
+                    <div class="text-emerald-400 text-sm mb-3">LIQUIDITY</div>
+                    <div class="text-7xl font-bold heading-font">25%</div>
+                    <div class="text-white/60 mt-6">250M tokens locked for 12 months</div>
+                </div>
+                <div class="glass rounded-3xl p-8 text-center">
+                    <div class="text-emerald-400 text-sm mb-3">MARKETING + CEX</div>
+                    <div class="text-7xl font-bold heading-font">18%</div>
+                    <div class="text-white/60 mt-6">Airdrops, listings, partnerships</div>
+                </div>
+                <div class="glass rounded-3xl p-8 text-center border-2 border-emerald-400">
+                    <div class="text-emerald-400 text-sm mb-3">TEAM &amp; ADVISORS</div>
+                    <div class="text-7xl font-bold heading-font">15%</div>
+                    <div class="text-white/60 mt-6">Vested over 24 months</div>
+                    <div class="text-xs mt-8 text-emerald-400">Fully doxxed team</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROADMAP & FAQ -->
+    <section class="max-w-screen-2xl mx-auto px-8 py-24 grid md:grid-cols-2 gap-20">
+        <div>
+            <h2 class="heading-font text-5xl mb-10">Roadmap</h2>
+            <div class="space-y-8">
+                <div class="flex gap-6">
+                    <div class="text-emerald-400 font-bold text-xl">Q1 2026</div>
+                    <div>Presale live • Token launch on Raydium • First CEX listing</div>
+                </div>
+                <div class="flex gap-6">
+                    <div class="text-emerald-400 font-bold text-xl">Q2 2026</div>
+                    <div>FlashBot launch (MEV protection) • Staking pool • NFT collection</div>
+                </div>
+                <div class="flex gap-6">
+                    <div class="text-emerald-400 font-bold text-xl">Q3 2026</div>
+                    <div>FlashPay integration • Mobile app • 10+ CEX listings</div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="faq">
+            <h2 class="heading-font text-5xl mb-10">FAQ</h2>
+            <div class="space-y-6">
+                **Summary:**
+How long does a transaction take?
+                    <p class="text-white/70 mt-4">On Solana, finality is \~400ms. You receive your $FLASH tokens instantly after confirmation.</p>
+                **Summary:**
+Do I need to approve the contract?
+                    <p class="text-white/70 mt-4">No. The presale contract uses a direct transfer method — one signature only.</p>
+                **Summary:**
+Can I buy with credit card?
+                    <p class="text-white/70 mt-4">Yes! MoonPay / Ramp integration coming in 48 hours for fiat buyers.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-black border-t border-white/10 py-12">
+        <div class="max-w-screen-2xl mx-auto px-8 text-center text-white/40 text-sm">
+            © 2026 FLASH • Not financial advice • Smart contract deployed on Solana mainnet
+            <div class="mt-4 flex justify-center gap-6 text-2xl">
+                <a href="#" class="hover:text-white"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="https://t.me/flashcoin" class="hover:text-white"><i class="fa-brands fa-telegram"></i></a>
+                <a href="#" class="hover:text-white"><i class="fa-solid fa-globe"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tailwind script already loaded via CDN
+        function initializeTailwind() {
+            return {
+                config(userConfig = {}) {
+                    return {
+                        content: [],
+                        theme: {
+                            extend: {},
+                        },
+                        plugins: [],
+                        ...userConfig,
+                    }
+                },
+                theme: {
+                    extend: {},
+                },
+                plugins: [],
+            }
+        }
+        
+        // Live transaction feed simulation
+        let txCounter = 142;
+        const fakeAddresses = ["8xK9...pQ2m", "4vL2...9kPq", "7mN3...xR8t", "2pQ4...vL9k", "5tR7...mN3x"];
+        
+        function addFakeTransaction() {
+            const feed = document.getElementById('tx-feed');
+            const amount = (Math.random() * 120 + 5).toFixed(1);
+            const address = fakeAddresses[Math.floor(Math.random() * fakeAddresses.length)];
+            
+            const txHTML = `
+                <div class="tx-bar flex justify-between items-center bg-white/5 rounded-2xl px-4 py-3 text-xs">
+                    <div class="font-mono text-emerald-400">${address}</div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-white">bought</span>
+                        <span class="font-semibold">${amount} SOL</span>
+                    </div>
+                    <div class="text-emerald-400 text-[10px] font-medium">just now</div>
+                </div>`;
+            
+            feed.insertAdjacentHTML('afterbegin', txHTML);
+            
+            // Keep only 6 transactions visible
+            if (feed.children.length > 6) {
+                feed.removeChild(feed.lastElementChild);
+            }
+            
+            // Update counter
+            txCounter += Math.floor(Math.random() * 8) + 3;
+            document.getElementById('tx-count').textContent = `${txCounter} in last 60s`;
+        }
+        
+        // Raised & tokens counter animation
+        let raised = 487291;
+        let tokensLeft = 3412709;
+        
+        function animateCounters() {
+            setInterval(() => {
+                raised += Math.floor(Math.random() * 1200) + 300;
+                document.getElementById('raised').textContent = '$' + raised.toLocaleString();
+                
+                tokensLeft -= Math.floor(Math.random() * 800) + 200;
+                if (tokensLeft < 500000) tokensLeft = 3412709;
+                document.getElementById('tokens-left').textContent = tokensLeft.toLocaleString();
+            }, 2200);
+        }
+        
+        // Wallet simulation
+        let isWalletConnected = false;
+        let connectedAddress = "0x71C459...f3A9";
+        
+        function connectWallet() {
+            if (isWalletConnected) return;
+            document.getElementById('wallet-text').innerHTML = 
+                `<span class="text-emerald-400 font-mono text-xs">\( {connectedAddress.slice(0,6)}... \){connectedAddress.slice(-4)}</span>`;
+            isWalletConnected = true;
+        }
+        
+        function simulateWalletConnect() {
+            hideBuyModal();
+            setTimeout(() => {
+                isWalletConnected = true;
+                document.getElementById('wallet-text').innerHTML = 
+                    `<span class="text-emerald-400 font-mono text-xs">\( {connectedAddress.slice(0,6)}... \){connectedAddress.slice(-4)}</span>`;
+                showBuyModal();
+            }, 800);
+        }
+        
+        function disconnectWallet() {
+            isWalletConnected = false;
+            document.getElementById('wallet-text').innerHTML = `Connect Wallet`;
+            hideBuyModal();
+        }
+        
+        // Modals
+        function showBuyModal() {
+            const modal = document.getElementById('buy-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            if (isWalletConnected) {
+                document.getElementById('wallet-connected-view').classList.remove('hidden');
+                document.getElementById('wallet-not-connected-view').classList.add('hidden');
+            } else {
+                document.getElementById('wallet-connected-view').classList.add('hidden');
+                document.getElementById('wallet-not-connected-view').classList.remove('hidden');
+            }
+            
+            // Live price update in modal
+            updateModalReceiveAmount();
+        }
+        
+        function hideBuyModal() {
+            const modal = document.getElementById('buy-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+        
+        function updateModalReceiveAmount() {
+            const input = document.getElementById('pay-amount');
+            if (!input) return;
+            
+            input.addEventListener('input', () => {
+                const pay = parseFloat(input.value) || 0;
+                const receive = (pay / 0.00042).toFixed(0);
+                document.getElementById('receive-amount').textContent = receive + ' $FLASH';
+                document.getElementById('total-pay').textContent = pay.toFixed(4) + ' SOL';
+            });
+        }
+        
+        function executeInstantTransaction() {
+            hideBuyModal();
+            
+            // Simulate blockchain delay of 800ms
+            setTimeout(() => {
+                const successModal = document.getElementById('success-modal');
+                const hash = '4v8k9p2mX7qL3tR8vK9p2mX7qL3tR8v';
+                document.getElementById('tx-hash').textContent = hash.substring(0, 8) + '...' + hash.substring(-8);
+                successModal.classList.remove('hidden');
+                successModal.classList.add('flex');
+                
+                // Add to live feed immediately
+                addFakeTransaction();
+            }, 1200);
+        }
+        
+        function hideSuccessModal() {
+            const modal = document.getElementById('success-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+        
+        function viewInExplorer() {
+            window.open('https://solscan.io/tx/4v8k9p2mX7qL3tR8vK9p2mX7qL3tR8v', '_blank');
+            hideSuccessModal();
+        }
+        
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+        
+        // Initialize everything
+        window.onload = function() {
+            animateCounters();
+            
+            // Start live transactions
+            setInterval(addFakeTransaction, 1800);
+            // Seed initial transactions
+            for (let i = 0; i < 5; i++) {
+                addFakeTransaction();
+            }
+            
+            console.log('%c✅ FLASH Presale website ready with instant Solana transactions!', 'color:#00ff9d; font-size:13px; font-family:monospace');
+        }
+    </script>
+</body>
+</html>
